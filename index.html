@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PinkTravel - Book Your Trip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #EC407A;
+            --primary-light: #F48FB1;
+            --primary-dark: #C2185B;
+            --secondary: #FCE4EC;
+            --accent: #FF4081;
+            --bg-white: #FFFFFF;
+            --bg-light: #FFF5F8;
+            --text-dark: #1A1A2E;
+            --text-gray: #6B7280;
+            --border: #FCE4EC;
+            --shadow: rgba(236, 64, 122, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .greeting {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .location svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Search Card */
+        .search-card {
+            margin: -30px 15px 15px;
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px var(--shadow);
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .search-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 20px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .search-tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+        }
+
+        .search-tab span:first-child {
+            font-size: 1.3rem;
+        }
+
+        .search-tab span:last-child {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: var(--bg-light);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .search-btn:active {
+            opacity: 0.9;
+        }
+
+        /* Quick Access */
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px 15px;
+        }
+
+        .quick-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .quick-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #FFF0F5 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .quick-item:active .quick-icon {
+            transform: scale(0.95);
+        }
+
+        .quick-item span {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-align: center;
+        }
+
+        /* Promo Banner */
+        .promo-section {
+            padding: 0 15px 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .section-link {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .promo-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .promo-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .promo-card {
+            min-width: 280px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-card::after {
+            content: '✈️';
+            position: absolute;
+            right: 10px;
+            bottom: -10px;
+            font-size: 80px;
+            opacity: 0.2;
+        }
+
+        .promo-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+        }
+
+        .promo-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .promo-desc {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .promo-card.blue {
+            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
+        }
+
+        .promo-card.green {
+            background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+        }
+
+        /* Popular Destinations */
+        .destinations {
+            padding: 20px 15px;
+        }
+
+        .dest-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .dest-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .dest-img {
+            height: 120px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #FFE4E1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+        }
+
+        .dest-info {
+            padding: 12px;
+        }
+
+        .dest-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .dest-location {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dest-price {
+            margin-top: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        .dest-price small {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            font-weight: 400;
+        }
+
+        /* Deals */
+        .deals {
+            padding: 20px 15px;
+            background: var(--bg-white);
+        }
+
+        .deal-card {
+            display: flex;
+            gap: 15px;
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .deal-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #FFE4E1 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .deal-info {
+            flex: 1;
+        }
+
+        .deal-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .deal-desc {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+
+        .deal-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deal-price-new {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .deal-price-old {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            text-decoration: line-through;
+        }
+
+        .deal-discount {
+            background: #FFEBEE;
+            color: #E53935;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-white);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            color: var(--text-gray);
+            font-size: 0.7rem;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item span:first-child {
+            font-size: 1.4rem;
+        }
+
+        /* Login Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-white);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 350px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .modal-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+
+        .modal h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .modal p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .modal-btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-top">
+            <div class="logo">💕 PinkTravel</div>
+            <div class="header-icons">
+                <div class="header-icon">🔔</div>
+                <div class="header-icon">💬</div>
+            </div>
+        </div>
+        <div class="greeting">Halo, traveler!</div>
+        <div class="location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Jakarta, Indonesia
+        </div>
+    </div>
+
+    <!-- Search Card -->
+    <div class="search-card">
+        <div class="search-tabs">
+            <button class="search-tab active" onclick="switchTab(this)">
+                <span>✈️</span>
+                <span>Pesawat</span>
+            </button>
+            <button class="search-tab" onclick="switchTab(this)">
+                <span>🏨</span>
+                <span>Hotel</span>
+            </button>
+            <button class="search-tab" onclick="switchTab(this)">
+                <span>🚆</span>
+                <span>Kereta</span>
+            </button>
+            <button class="search-tab" onclick="switchTab(this)">
+                <span>🚗</span>
+                <span>Mobil</span>
+            </button>
+        </div>
+
+        <div class="search-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Dari</label>
+                    <input type="text" class="form-input" value="Jakarta (CGK)" id="fromInput">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ke</label>
+                    <input type="text" class="form-input" placeholder="Kota tujuan" id="toInput">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Tanggal Berangkat</label>
+                    <input type="date" class="form-input" id="dateInput">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Penumpang</label>
+                    <input type="number" class="form-input" value="1" min="1" id="passengerInput">
+                </div>
+            </div>
+            <button class="search-btn" onclick="searchFlight()">🔍 Cari Penerbangan</button>
+        </div>
+    </div>
+
+    <!-- Quick Access -->
+    <div class="quick-access">
+        <div class="quick-item" onclick="showModal('tiket')">
+            <div class="quick-icon">🎫</div>
+            <span>Tiket</span>
+        </div>
+        <div class="quick-item" onclick="showModal('promo')">
+            <div class="quick-icon">🎁</div>
+            <span>Promo</span>
+        </div>
+        <div class="quick-item" onclick="showModal('pay')">
+            <div class="quick-icon">💳</div>
+            <span>Pembayaran</span>
+        </div>
+        <div class="quick-item" onclick="showModal('point')">
+            <div class="quick-icon">⭐</div>
+            <span>Poin</span>
+        </div>
+    </div>
+
+    <!-- Promo Section -->
+    <div class="promo-section">
+        <div class="section-header">
+            <h2 class="section-title">🔥 Promo Spesial</h2>
+            <a href="#" class="section-link">Lihat Semua</a>
+        </div>
+        <div class="promo-scroll">
+            <div class="promo-card">
+                <span class="promo-badge">TERBATAS</span>
+                <div class="promo-title">Diskon 50%</div>
+                <div class="promo-desc">Untuk penerbangan domestik! Berlaku hingga akhir bulan.</div>
+            </div>
+            <div class="promo-card blue">
+                <span class="promo-badge">NEW</span>
+                <div class="promo-title">Hotel Murah</div>
+                <div class="promo-desc">Diskon hingga 40% untuk booking hotel favoritmu.</div>
+            </div>
+            <div class="promo-card green">
+                <span class="promo-badge">WEEKEND</span>
+                <div class="promo-title">Cashback 30%</div>
+                <div class="promo-desc">Khusus transaksi weekend dengan OVO & GoPay.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Destinations -->
+    <div class="destinations">
+        <div class="section-header">
+            <h2 class="section-title">🏝️ Destinasi Populer</h2>
+            <a href="#" class="section-link">Lihat Semua</a>
+        </div>
+        <div class="dest-grid">
+            <div class="dest-card" onclick="showModal('bali')">
+                <div class="dest-img">🏖️</div>
+                <div class="dest-info">
+                    <div class="dest-name">Bali</div>
+                    <div class="dest-location">📍 Indonesia</div>
+                    <div class="dest-price">Rp 850.000 <small>/orang</small></div>
+                </div>
+            </div>
+            <div class="dest-card" onclick="showModal('jogja')">
+                <div class="dest-img">🏛️</div>
+                <div class="dest-info">
+                    <div class="dest-name">Yogyakarta</div>
+                    <div class="dest-location">📍 Indonesia</div>
+                    <div class="dest-price">Rp 550.000 <small>/orang</small></div>
+                </div>
+            </div>
+            <div class="dest-card" onclick="showModal('labuan')">
+                <div class="dest-img">🦎</div>
+                <div class="dest-info">
+                    <div class="dest-name">Labuan Bajo</div>
+                    <div class="dest-location">📍 Indonesia</div>
+                    <div class="dest-price">Rp 1.200.000 <small>/orang</small></div>
+                </div>
+            </div>
+            <div class="dest-card" onclick="showModal('raja')">
+                <div class="dest-img">🌊</div>
+                <div class="dest-info">
+                    <div class="dest-name">Raja Ampat</div>
+                    <div class="dest-location">📍 Indonesia</div>
+                    <div class="dest-price">Rp 2.500.000 <small>/orang</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deals -->
+    <div class="deals">
+        <div class="section-header">
+            <h2 class="section-title">💼 Penawaran Terbaik</h2>
+        </div>
+        
+        <div class="deal-card" onclick="showModal('deal1')">
+            <div class="deal-icon">✈️</div>
+            <div class="deal-info">
+                <div class="deal-title">Jakarta - Singapore</div>
+                <div class="deal-desc">Penerbangan langsung, bagasi 20kg</div>
+                <div class="deal-price">
+                    <span class="deal-price-new">Rp 1.299.000</span>
+                    <span class="deal-price-old">Rp 2.100.000</span>
+                    <span class="deal-discount">-38%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="deal-card" onclick="showModal('deal2')">
+            <div class="deal-icon">🏨</div>
+            <div class="deal-info">
+                <div class="deal-title">Hotel Bali 4★ 3 Malam</div>
+                <div class="deal-desc">Termasuk breakfast & airport transfer</div>
+                <div class="deal-price">
+                    <span class="deal-price-new">Rp 2.899.000</span>
+                    <span class="deal-price-old">Rp 4.500.000</span>
+                    <span class="deal-discount">-35%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="deal-card" onclick="showModal('deal3')">
+            <div class="deal-icon">🎢</div>
+            <div class="deal-info">
+                <div class="deal-title">Universal Studios Singapore</div>
+                <div class="deal-desc">Tiket masuk + Express Pass</div>
+                <div class="deal-price">
+                    <span class="deal-price-new">Rp 1.150.000</span>
+                    <span class="deal-price-old">Rp 1.800.000</span>
+                    <span class="deal-discount">-36%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <span>🏠</span>
+            <span>Beranda</span>
+        </div>
+        <div class="nav-item">
+            <span>📋</span>
+            <span>Pesanan</span>
+        </div>
+        <div class="nav-item">
+            <span>❤️</span>
+            <span>Favorit</span>
+        </div>
+        <div class="nav-item">
+            <span>🎁</span>
+            <span>Rewards</span>
+        </div>
+        <div class="nav-item">
+            <span>👤</span>
+            <span>Akun</span>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-icon" id="modalIcon">✈️</div>
+            <h3 id="modalTitle">Fitur Segera Hadir</h3>
+            <p id="modalDesc">Kami sedang mengembangkan fitur ini. Stay tuned!</p>
+            <button class="modal-btn" onclick="closeModalBtn()">OK</button>
+            <button class="modal-btn modal-btn-secondary" onclick="closeModalBtn()">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        // Set default date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('dateInput').valueAsDate = tomorrow;
+
+        function switchTab(el) {
+            document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function searchFlight() {
+            const from = document.getElementById('fromInput').value;
+            const to = document.getElementById('toInput').value;
+            const date = document.getElementById('dateInput').value;
+            const passenger = document.getElementById('passengerInput').value;
+
+            if (!to) {
+                alert('Masukkan kota tujuan!');
+                return;
+            }
+
+            document.getElementById('modalIcon').textContent = '🔍';
+            document.getElementById('modalTitle').textContent = 'Mencari Penerbangan...';
+            document.getElementById('modalDesc').textContent = `${from} → ${to} | ${passenger} penumpang | ${date}`;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function showModal(type) {
+            const data = {
+                'tiket': { icon: '🎫', title: 'E-Tiket Saya', desc: 'Lihat semua tiket yang sudah dibeli.' },
+                'promo': { icon: '🎁', title: 'Promo Hari Ini', desc: 'Dapatkan diskon hingga 50% untuk berbagai destinasi!' },
+                'pay': { icon: '💳', title: 'Pembayaran', desc: 'Kelola metode pembayaran dan tagihan Anda.' },
+                'point': { icon: '⭐', title: 'Poin Reward', desc: 'Anda memiliki 12.500 poin. Tukar dengan voucher menarik!' },
+                'bali': { icon: '🏖️', title: 'Bali, Indonesia', desc: 'Surga tropis dengan pantai indah dan budaya yang kaya. Mulai dari Rp 850.000/orang.' },
+                'jogja': { icon: '🏛️', title: 'Yogyakarta', desc: 'Kota budaya dengan Candi Borobudur dan Prambanan. Mulai dari Rp 550.000/orang.' },
+                'labuan': { icon: '🦎', title: 'Labuan Bajo', desc: 'Gerbang menuju Taman Nasional Komodo. Mulai dari Rp 1.200.000/orang.' },
+                'raja': { icon: '🌊', title: 'Raja Ampat', desc: 'Surga diving dengan keindahan bawah laut. Mulai dari Rp 2.500.000/orang.' },
+                'deal1': { icon: '✈️', title: 'Jakarta - Singapore', desc: 'Penerbangan langsung dengan Lion Air. Bagasi 20kg sudah termasuk.' },
+                'deal2': { icon: '🏨', title: 'Hotel Bali 4★', desc: 'Hotel premium di kawasan Kuta dengan breakfast dan shuttle bandara.' },
+                'deal3': { icon: '🎢', title: 'Universal Studios', desc: 'Nikmati semua wahana dengan Express Pass tanpa antri!' },
+            };
+
+            const item = data[type] || { icon: '✨', title: 'Fitur Baru', desc: 'Segera hadir!' };
+            document.getElementById('modalIcon').textContent = item.icon;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalDesc').textContent = item.desc;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal(e) {
+            if (e.target.id === 'modal') {
+                document.getElementById('modal').classList.remove('show');
+            }
+        }
+
+        function closeModalBtn() {
+            document.getElementById('modal').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
